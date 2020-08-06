@@ -6,8 +6,8 @@
 #include <error.h>
 #include <errno.h>
 
-#ifndef EXEC_SEARCH_PATH_LIST
-#define EXEC_SEARCH_PATH_LIST
+#ifndef EXEC_SEARCH_PATH
+#define EXEC_SEARCH_PATH
 #endif
 
 #ifndef SELF_PATH_HOLDER
@@ -55,30 +55,40 @@
     _res;\
 })
 
+
 extern char **environ;
 
 /*
  * Caution: pathList is modifiable
  */
-static char pathList[] = QUOTE(EXEC_SEARCH_PATH_LIST);
+static char pathList[] = QUOTE(EXEC_SEARCH_PATH);
 static char const * const pathDelim = ":";
 static char const * const selfPathHolder = QUOTE(SELF_PATH_HOLDER);
+
+static char const * const argsNotSane =         "command not sane";
+static char const * const noSrchPaths =         "no search paths detected";
+static char const * const selfReqRelative =     "self directory required when "
+                                                "relative search paths";
+static char const * const pathNotAllocated = "command path not allocated";
 
 /*
  * Pre: path != NULL;
  */
-static bool isRelativePath(char const *path) {
+static bool isRelativePath(char const *path) 
+{
     return path[0] != '/';
 }
 
 /*
  *
  */
-static bool checkArgs(int argc, char const *argv[]) {
+static bool checkArgs(int argc, char const *argv[]) 
+{
     return argc >= 2 && isRelativePath(argv[1]);
 }
 
-static char * getExeDir(char **dirHandler) {
+static char * getExeDir(char **dirHandler) 
+{
     char *resolvedPath = *dirHandler = realpath(selfPathHolder, NULL);
 
     if (!resolvedPath) {
@@ -93,7 +103,8 @@ static char * getExeDir(char **dirHandler) {
 /*
  * Pre: pathList != NULL;
  */
-static size_t pathNum(char const *pathList, char const *delim) {
+static size_t pathNum(char const *pathList, char const *delim) 
+{
     size_t pathCount = 0;
     const char *nextPath;
 
@@ -119,7 +130,8 @@ static size_t pathNum(char const *pathList, char const *delim) {
  * Pre: dest is spacious enough for all entries (see pathNum above)
  * Pre: pathList != NULL;
  */
-static void getSearchPaths(char **dest, char *pathList, char const *delim) {
+static void getSearchPaths(char **dest, char *pathList, char const *delim) 
+{
     char *currPath;
 
     while ((currPath = *dest = strsep(&pathList, delim))) {
@@ -133,7 +145,8 @@ static void getSearchPaths(char **dest, char *pathList, char const *delim) {
 /*
  * Pre: for every p in paths, p != NULL
  */
-static char *concatPaths(char const * paths[], size_t num) {
+static char *concatPaths(char const * paths[], size_t num) 
+{
     size_t lengths[num];
 
     MAP_VAL((size_t *)lengths, paths, num, strlen);
@@ -155,16 +168,11 @@ static char *concatPaths(char const * paths[], size_t num) {
     return resPath;
 }
 
-static char const
- * const argsNotSane = "command not sane",
- * const noSrchPaths = "no search paths detected",
- * const selfReqRelative = "self directory required when relative search paths",
- * const pathNotAllocated = "command path not allocated";
-
 /*
  * Intended usage: <executable path> <command name> [<command args>...]
  */
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     if (!checkArgs(argc, (char const **)argv)) {
         error(EXIT_FAILURE, EINVAL, argsNotSane);
     }

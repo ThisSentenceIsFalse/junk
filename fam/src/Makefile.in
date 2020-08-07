@@ -1,0 +1,16 @@
+SHELL = /bin/sh
+
+srcdir = @srcdir@
+VPATH = @srcdir@
+CC = @CC@
+LD = @CC@
+
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+fam: main.c
+	$(CC) $< -o $@
+
+devfam: main.c
+	$(CC) -Wall -pedantic $< -o $@
+

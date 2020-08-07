@@ -1,0 +1,10 @@
+# everything
+*
+
+# but the ignores and src/ contents
+!.gitignore
+!src/
+!src/**
+
+# except ignore autom4te.cache
+autom4te.cache/

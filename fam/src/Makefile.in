@@ -1,9 +1,26 @@
+# @configure_input@
+
 SHELL = /bin/sh
 
+# these need to be explicitly set for now. Probably
+# annulled by automake
 srcdir = @srcdir@
 VPATH = @srcdir@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+# AC_PROG_CC makes these available
 CC = @CC@
 LD = @CC@
+
+
+# AC_INIT makes these available
+PACKAGE = @PACKAGE_TARNAME@
+VERSION = @PACKAGE_VERSION@
+
+# Nothing special about any of these rules
+.PHONY: default dist install
 
 .SUFFIXES:
 .SUFFIXES: .c .o
@@ -11,6 +28,11 @@ LD = @CC@
 fam: main.c
 	$(CC) $< -o $@
 
+dist:
+	tar --exclude-ignore=.dist -czf $(PACKAGE)-$(VERSION).tar.gz $(srcdir)
+
 devfam: main.c
 	$(CC) -Wall -pedantic $< -o $@
 
+# TODO: test target
+# TODO: research other canonical targets

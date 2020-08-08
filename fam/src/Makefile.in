@@ -14,6 +14,9 @@ exec_prefix = @exec_prefix@
 CC = @CC@
 LD = @CC@
 
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+LDFLAGS = @LDFLAGS@
 
 # AC_INIT makes these available
 PACKAGE = @PACKAGE_TARNAME@
@@ -25,14 +28,15 @@ VERSION = @PACKAGE_VERSION@
 .SUFFIXES:
 .SUFFIXES: .c .o
 
-fam: main.c
-	$(CC) $< -o $@
+# Will use implicit rule
+default: fam
+
+devfam: fam.c
+	$(CC) -Wall -pedantic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 dist:
 	tar --exclude-ignore=.dist -czf $(PACKAGE)-$(VERSION).tar.gz $(srcdir)
 
-devfam: main.c
-	$(CC) -Wall -pedantic $< -o $@
 install:
 	mv fam @bindir@
 

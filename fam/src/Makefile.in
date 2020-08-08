@@ -33,6 +33,8 @@ dist:
 
 devfam: main.c
 	$(CC) -Wall -pedantic $< -o $@
+install:
+	mv fam @bindir@
 
 # TODO: test target
 # TODO: research other canonical targets

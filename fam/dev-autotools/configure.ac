@@ -12,6 +12,13 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 
 AC_PROG_CC([gcc cl cc])
 
+dnl These checks also default to testing standard C headers
+dnl TODO: any other way of gathering the required system headers?
+AC_CHECK_HEADER([error.h], [], [AC_MSG_ERROR("Cannot find std headers)])
+AC_CHECK_HEADER([errno.h], [], [AC_MSG_ERROR("Cannot find std headers)])
+AC_CHECK_HEADER([libgen.h], [], [AC_MSG_ERROR("Cannot find std headers)])
+AC_CHECK_HEADER([stdbool.h], [], [AC_MSG_ERROR("Cannot find std headers)])
+
 # config.h is generated in the build directory as configure variations
 # may potentially generate different versions
 AC_CONFIG_HEADERS([artifacts/config.h:config.h.in])

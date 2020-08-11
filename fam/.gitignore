@@ -1,11 +1,15 @@
 # everything
 *
 
-# but the ignores and src/ contents
+# but the ignores, src/ and dev-*/ contents
 !.gitignore
 !*.md
-!src/
+!src
 !src/**
+!dev-*/
+!dev-*/**
 
-# except ignore autom4te.cache
+# except ignore autom4te.cache and ~
 autom4te.cache/
+*~
+
